@@ -1,5 +1,11 @@
 #!/usr/bin/python
 
+# Currently run as a docker container, off an ubuntu 14.04 base image.
+# sudo docker run -i -t ubuntu:14.04 /bin/bash
+# sudo apt-get install mingw64
+# sudo docker commit -m "Setup builder" 68413c782455 fishtest_builder
+# sudo docker attach sharp_babbage
+
 import boto
 import json
 import os
@@ -20,33 +26,33 @@ FISHCOOKING_URL = 'https://github.com/mcostalba/FishCooking'
 LINUX32 = {
   'system': 'linux',
   'architecture': '32',
-  'make_cmd': 'make build ARCH=x86-32 COMP=gcc',
+  'make_cmd': 'make profile-build ARCH=x86-32 COMP=gcc',
   'gcc_alias': '',
   'native': True,
 }
 LINUX64 = {
   'system': 'linux',
   'architecture': '64',
-  'make_cmd': 'make build ARCH=x86-64-modern COMP=gcc',
+  'make_cmd': 'make profile-build ARCH=x86-64-modern COMP=gcc',
   'gcc_alias': '',
   'native': True,
 }
 WIN32 = {
   'system': 'windows',
   'architecture': '32',
-  'make_cmd': 'make build ARCH=x86-32 COMP=mingw',
-  'gcc_alias': 'x86_64-w64-mingw32-c++',
+  'make_cmd': 'make profile-build ARCH=x86-32 COMP=mingw',
+  'gcc_alias': 'i686-w64-mingw32-c++',
   'native': False,
 }
 WIN64 = {
   'system': 'windows',
   'architecture': '64',
-  'make_cmd': 'make build ARCH=x86-64 COMP=mingw',
+  'make_cmd': 'make profile-build ARCH=x86-64 COMP=mingw',
   'gcc_alias': 'x86_64-w64-mingw32-c++',
   'native': False,
 }
 
-TARGETS = [WIN32, WIN64]
+TARGETS = [WIN64]
 
 def github_api(repo):
   """ Convert from https://github.com/<user>/<repo>
@@ -69,7 +75,7 @@ def make(orig_src_dir, destination, target):
       with open('Makefile') as f:
         new_makefile = f.read()
         new_makefile = new_makefile.replace('CXX=g++', 'CXX=' + target['gcc_alias'])
-        new_makefile = new_makefile.replace('$(EXTRALDFLAGS)', '$(EXTRALDFLAGS) -static-libstdc++ -static-libgcc')
+        new_makefile = new_makefile.replace('$(EXTRALDFLAGS)', '$(EXTRALDFLAGS) -static-libstdc++ -static-libgcc -static')
         out.write(new_makefile)
     shutil.copyfile('tmp', 'Makefile')
 

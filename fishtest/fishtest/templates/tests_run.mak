@@ -4,6 +4,10 @@
 
 <form class="form-horizontal" action="${request.url}" method="POST">
   <legend>Create New Test</legend>
+  Please read the <a href="https://github.com/glinscott/fishtest/wiki/Creating-my-first-test">Testing Guidelines</a> before
+  creating your test.
+
+  <br><br>
   <div class="control-group">
     <label class="control-label">Test type:</label>
     <div class="controls">
@@ -121,7 +125,7 @@ Cowardice,150,0,200,10,0.0020"""})['raw_params']}</textarea>
   <div class="control-group">
     <label class="control-label">Book:</label>
     <div class="controls">
-      <input name="book" value="${args.get('book', '8moves_v3.pgn')}">
+      <input name="book" value="${args.get('book', '2moves_v1.pgn')}">
     </div>
   </div>
   <div class="control-group">
@@ -134,6 +138,12 @@ Cowardice,150,0,200,10,0.0020"""})['raw_params']}</textarea>
     <label class="control-label">Priority:</label>
     <div class="controls">
       <input name="priority" value="${args.get('priority', 0)}">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Throughput:</label>
+    <div class="controls">
+      <input name="throughput" value="${args.get('throughput', 1000)}">
     </div>
   </div>
   <div class="control-group">
